@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Diabetes Prediction</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Diabetes Predictor</h1>
+        <form id="predictForm">
+
+            <label>Age:</label>
+            <input type="number" name="Age" required>
+
+            <div class="grid-container">
+                <div class="grid-item">
+                    <label>Gender:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="Gender" value="1" required> Male</label>
+                        <label><input type="radio" name="Gender" value="0"> Female</label>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <label>Polyuria:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="Polyuria" value="1" required> Yes</label>
+                        <label><input type="radio" name="Polyuria" value="0"> No</label>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <label>Polydipsia:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="Polydipsia" value="1" required> Yes</label>
+                        <label><input type="radio" name="Polydipsia" value="0"> No</label>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <label>Sudden Weight Loss:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="sudden_weight_loss" value="1" required> Yes</label>
+                        <label><input type="radio" name="sudden_weight_loss" value="0"> No</label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <button type="submit">Predict</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('predictForm');
+        const resultDiv = document.getElementById('result');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            resultDiv.innerHTML = `<h2>${result.prediction || result.error}</h2>`;
+        });
+    </script>
+</body>
+
+</html>
