@@ -1,3 +1,6 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import joblib
@@ -17,13 +20,13 @@ def home():
 def predict():
     data = request.json
     try:
-        features = np.array([[
+        features = np.array([
             int(data['Age']),
             int(data['Gender']),
             int(data['Polyuria']),
             int(data['Polydipsia']),
             int(data['sudden_weight_loss']),
-        ]])
+        ]).reshape(1, -1)
         prediction = model.predict([features])[0]
         return jsonify({'prediction': 'Diabetic' if prediction == 1 else 'Not Diabetic'})
     except Exception as e:
