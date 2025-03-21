@@ -5,12 +5,11 @@ from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import joblib
 import numpy as np
-from mangum import Mangum  # Adapter for serverless
+import os
 
 app = Flask(__name__)
 CORS(app)  # Allow all origins
 
-# Load the ML model
 model = joblib.load(open('model.pkl', 'rb'))
 
 @app.route('/')
@@ -28,16 +27,11 @@ def predict():
             int(data['Polydipsia']),
             int(data['sudden_weight_loss']),
         ]).reshape(1, -1)
-        
-        prediction = model.predict(features)[0]
+        prediction = model.predict([features])[0]
         return jsonify({'prediction': 'Diabetic' if prediction == 1 else 'Not Diabetic'})
     except Exception as e:
         return jsonify({'error': str(e)})
 
-# Create a serverless handler for Vercel
-handler = Mangum(app)
-
 if __name__ == '__main__':
-    # For local testing
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port, debug=False)

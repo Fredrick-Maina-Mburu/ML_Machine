@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Diabetes Prediction</title>
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
@@ -66,9 +66,9 @@
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
 
-            const apiUrl = window.location.origin + '/predict';
+            // const apiUrl = window.location.origin + '/predict';
 
-            const response = await fetch(apiUrl, {
+            const response = await fetch('http://127.0.0.1:10000/predict', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
